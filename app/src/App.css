@@ -1,0 +1,290 @@
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  padding: 32px clamp(20px, 4vw, 64px) 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: #f3f5ff;
+}
+
+.hero-root {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(9, 9, 16, 0.55), rgba(16, 22, 39, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  filter: saturate(0);
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 48px);
+}
+
+.badge {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge img {
+  width: 60px;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 620px;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 3.4vw, 46px);
+  margin: 8px 0;
+}
+
+.hero-subhead {
+  max-width: 560px;
+  color: rgba(243, 245, 255, 0.8);
+  margin: 0;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.hero-stats strong {
+  font-size: 28px;
+  display: block;
+  line-height: 1;
+}
+
+.hero-stats span {
+  font-size: 12px;
+  color: rgba(243, 245, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  margin: 0;
+  color: rgba(243, 245, 255, 0.7);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.panel {
+  background: rgba(11, 13, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.panel header h2 {
+  margin: 6px 0;
+}
+
+.panel header p {
+  margin: 0;
+  color: rgba(243, 245, 255, 0.75);
+}
+
+.form-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(243, 245, 255, 0.8);
+}
+
+input,
+textarea,
+select {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f3f5ff;
+  font-size: 15px;
+  padding: 10px 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+select {
+  appearance: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(130, 166, 255, 0.8);
+  box-shadow: 0 0 0 3px rgba(130, 166, 255, 0.25);
+}
+
+textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.full-column {
+  grid-column: 1 / -1;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.primary {
+  background: linear-gradient(135deg, #7a62ff, #3db9ff);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(125, 98, 255, 0.45);
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f3f5ff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.panel + .panel {
+  margin-top: 0;
+}
+
+.release-feed .summary {
+  display: flex;
+  gap: 16px;
+  color: rgba(243, 245, 255, 0.7);
+}
+
+.empty-state {
+  margin: 32px 0 0;
+  color: rgba(243, 245, 255, 0.65);
+  line-height: 1.6;
+}
+
+.release-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.release-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.release-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.release-card__date {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: rgba(243, 245, 255, 0.6);
+}
+
+.release-card__description {
+  margin: 0;
+  color: rgba(243, 245, 255, 0.75);
+  font-size: 14px;
+}
+
+.badge-tag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(61, 185, 255, 0.15);
+  font-size: 12px;
+  color: #3db9ff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 6px 4px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.empty-row {
+  margin: 0;
+  color: rgba(243, 245, 255, 0.65);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
