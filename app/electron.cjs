@@ -1,27 +1,85 @@
-// main Electron process
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
+const isDev = !app.isPackaged;
+const WINDOW_TITLE = "Code Release Tracker";
+
+app.setName(WINDOW_TITLE);
+
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+  const window = new BrowserWindow({
+    width: 1440,
+    height: 940,
+    minWidth: 1180,
+    minHeight: 760,
+    title: WINDOW_TITLE,
+    icon: path.join(__dirname, "src", "assets", "codeReleaseTrackerLogo.png"),
+    backgroundColor: "#05060f",
+    frame: false,
+    titleBarStyle: "hidden",
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
     },
   });
-  win.loadURL("http://localhost:5173");
+
+  window.on("page-title-updated", (event) => {
+    event.preventDefault();
+    window.setTitle(WINDOW_TITLE);
+  });
+
+  window.on("maximize", () => {
+    window.webContents.send("window:maximized-changed", true);
+  });
+
+  window.on("unmaximize", () => {
+    window.webContents.send("window:maximized-changed", false);
+  });
+
+  if (isDev) {
+    window.loadURL("http://localhost:5173");
+  } else {
+    window.loadFile(path.join(__dirname, "dist", "index.html"));
+  }
+
+  window.setTitle(WINDOW_TITLE);
+
+  return window;
 }
 
 app.whenReady().then(() => {
+  ipcMain.on("window:minimize", (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.minimize();
+  });
+
+  ipcMain.on("window:maximize", (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+
+    if (window.isMaximized()) {
+      window.unmaximize();
+    } else {
+      window.maximize();
+    }
+  });
+
+  ipcMain.on("window:close", (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.close();
+  });
+
   createWindow();
-  app.on("activate", function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
   });
 });
 
-app.on("window-all-closed", function () {
-  if (process.platform !== "darwin") app.quit();
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });

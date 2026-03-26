@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# Code Release Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Code Release Tracker is an Electron desktop application for managing software releases and the repositories that ship inside them. It is built with React, TypeScript, Vite, and Electron.
 
-Currently, two official plugins are available:
+The application lets teams:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- create and track releases
+- attach repositories with versions and optional tags
+- monitor monthly and quarterly release coverage
+- import and export tracker data locally
 
-## React Compiler
+## Version
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Current app version: `0.1.0-beta.1`
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Install dependencies:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Run the app in development:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+Run type-checking:
+
+```bash
+npm run build
+```
+
+Note: in this environment, `npm run build` may still hit a Vite `spawn EPERM` issue when loading `vite.config.ts`. `tsc -b` and `eslint .` are the more reliable local verification commands here.
+
+## Project Structure
+
+- `src/App.tsx`: main application UI and state management
+- `src/App.css`: application styling
+- `src/index.css`: global styling and background treatment
+- `electron.cjs`: Electron main process
+- `preload.js`: Electron preload bridge
+
+## Contributing
+
+This project is open source and contributions are welcome.
+
+If you want to contribute:
+
+1. Fork the repository and create a focused branch for your change.
+2. Keep changes scoped. Avoid mixing UI work, refactors, and behavioral changes in one patch unless they are tightly related.
+3. Run verification before opening a pull request:
+
+```bash
+node_modules\.bin\tsc.cmd -b
+node_modules\.bin\eslint.cmd .
+```
+
+4. Include a clear summary of what changed, why it changed, and how it was tested.
+5. For UI changes, include screenshots or a short screen recording.
+6. For destructive actions or workflow changes, document the user impact explicitly.
+
+## Contribution Guidelines
+
+- Preserve existing user data behavior unless a migration path is included.
+- Prefer small, reviewable changes over large rewrites.
+- Keep naming consistent with the release/repository model already used in the app.
+- Do not commit generated files or unrelated formatting churn.
+- If you add a new feature, update this README when the workflow changes.
+
+## Open Source Notes
+
+- Bug reports should include reproduction steps, expected behavior, and actual behavior.
+- Feature requests should explain the release-tracking use case they improve.
+- Pull requests should stay implementation-focused and avoid bundling unrelated cleanup.
