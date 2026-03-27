@@ -1,0 +1,12 @@
+{
+  "testDir": "tests",
+  "generatedTestsDir": "__themis__\\tests",
+  "testRegex": "\\.(test|spec)\\.(js|jsx|ts|tsx)$",
+  "maxWorkers": 17,
+  "reporter": "next",
+  "environment": "node",
+  "setupFiles": [],
+  "tsconfigPath": "tsconfig.json",
+  "htmlReportPath": "__themis__\\reports\\report.html",
+  "testIgnore": []
+}
