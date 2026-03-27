@@ -1,12 +1,12 @@
 const { app, BrowserWindow, dialog, ipcMain } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const path = require("path");
-const { pathToFileURL } = require("url");
 
 const isDev = !app.isPackaged;
 const WINDOW_TITLE = "Code Release Tracker";
-const MIN_SPLASH_DURATION_MS = 2000;
-const SPLASH_IMAGE = path.join(__dirname, "src", "assets", "codeReleaseTrackerBg.png");
+const MIN_SPLASH_DURATION_MS = 4500;
+const SPLASH_CLOSE_FADE_MS = 280;
+const SPLASH_HTML = path.join(__dirname, "splash.html");
 const WINDOW_ICON = path.join(
   __dirname,
   "src",
@@ -108,7 +108,6 @@ async function checkForUpdates(manual = false) {
 }
 
 function createSplashWindow() {
-  const splashImageUrl = pathToFileURL(SPLASH_IMAGE).href;
   const splash = new BrowserWindow({
     width: 760,
     height: 440,
@@ -128,132 +127,7 @@ function createSplashWindow() {
   });
 
   splash.setMenuBarVisibility(false);
-  splash.loadURL(
-    `data:text/html;charset=UTF-8,${encodeURIComponent(`
-      <!doctype html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>${WINDOW_TITLE}</title>
-          <style>
-            :root {
-              color-scheme: dark;
-              font-family: "Segoe UI", system-ui, sans-serif;
-            }
-
-            html, body {
-              width: 100%;
-              height: 100%;
-              margin: 0;
-            }
-
-            body {
-              display: grid;
-              place-items: center;
-              background:
-                linear-gradient(180deg, rgba(4, 6, 17, 0.18), rgba(4, 6, 17, 0.82)),
-                url("${splashImageUrl}") center/cover no-repeat;
-              overflow: hidden;
-              opacity: 0;
-              transform: scale(1.01);
-              transition: opacity 240ms ease, transform 240ms ease;
-            }
-
-            body.is-visible {
-              opacity: 1;
-              transform: scale(1);
-            }
-
-            body.is-closing {
-              opacity: 0;
-              transform: scale(0.99);
-            }
-
-            .panel {
-              display: grid;
-              gap: 12px;
-              justify-items: center;
-              padding: 18px 22px;
-              border: 1px solid rgba(255, 255, 255, 0.14);
-              border-radius: 18px;
-              background: rgba(5, 6, 15, 0.58);
-              box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
-              backdrop-filter: blur(10px);
-            }
-
-            .title {
-              margin: 0;
-              font-size: 18px;
-              font-weight: 700;
-              letter-spacing: 0.06em;
-              text-transform: uppercase;
-            }
-
-            .subtitle {
-              margin: 0;
-              color: rgba(248, 250, 252, 0.76);
-              font-size: 13px;
-            }
-
-            .status {
-              margin: 0;
-              color: rgba(248, 250, 252, 0.62);
-              font-size: 12px;
-              letter-spacing: 0.03em;
-              text-transform: uppercase;
-            }
-
-            .spinner {
-              width: 22px;
-              height: 22px;
-              border: 2px solid rgba(248, 250, 252, 0.22);
-              border-top-color: #f8fafc;
-              border-radius: 50%;
-              animation: spin 0.9s linear infinite;
-            }
-
-            @keyframes spin {
-              to {
-                transform: rotate(360deg);
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="panel" aria-label="Loading Code Release Tracker">
-            <div class="spinner" aria-hidden="true"></div>
-            <p class="title">Code Release Tracker</p>
-            <p class="subtitle">Loading releases and workspace state...</p>
-            <p class="status" id="splash-status">Checking for updates...</p>
-          </div>
-          <script>
-            const status = document.getElementById("splash-status");
-            const statuses = [
-              "Checking for updates...",
-              "Loading release data...",
-              "Preparing workspace...",
-            ];
-
-            let statusIndex = 0;
-            const rotateStatus = () => {
-              statusIndex = Math.min(statusIndex + 1, statuses.length - 1);
-              if (status) {
-                status.textContent = statuses[statusIndex];
-              }
-            };
-
-            requestAnimationFrame(() => {
-              document.body.classList.add("is-visible");
-            });
-
-            setTimeout(rotateStatus, 650);
-            setTimeout(rotateStatus, 1300);
-          </script>
-        </body>
-      </html>
-    `)}`,
-  );
+  splash.loadFile(SPLASH_HTML);
 
   return splash;
 }
@@ -324,7 +198,7 @@ function launchApplicationWindow() {
           if (!splashWindow.isDestroyed()) {
             splashWindow.close();
           }
-        }, 240);
+        }, SPLASH_CLOSE_FADE_MS);
       }
     }, remaining);
   });
