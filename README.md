@@ -71,14 +71,13 @@ To install locally, run the installer `.exe` and follow the setup wizard. You ca
 
 Published Windows installers are stored in the repository's GitHub Releases. The app checks that release feed on startup when running from a packaged Windows build, and prompts you to restart after a downloaded update is ready.
 
-To publish a new Windows release from CI or a tag build, use:
+Build the installer locally with:
 
 ```powershell
-npm run release:ci
+npm run dist:win
 ```
 
-If you just want to build the installer locally without publishing it, use `npm run dist:win`.
-Do not run `npm run release:ci` locally; it is meant for GitHub Actions publishing only.
+If you want to publish a release, upload the installer from the GitHub Releases UI after tagging a version like `v0.2.3`.
 
 ## Project Structure
 
