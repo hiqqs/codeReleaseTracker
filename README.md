@@ -2,6 +2,10 @@
 
 Code Release Tracker is an Electron desktop application for managing software releases and the repositories that ship inside them. It is built with React, TypeScript, Vite, and Electron.
 
+<p align="center">
+  <img src="./src/assets/codeReleaseTrackerDash.png" alt="Code Release Tracker dashboard preview" width="640" />
+</p>
+
 The application lets teams:
 
 - create and track releases
