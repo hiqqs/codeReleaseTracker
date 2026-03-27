@@ -15,7 +15,7 @@ The application lets teams:
 
 ## Version
 
-Current app version: `0.2.3`
+Current app version: `0.2.4`
 
 For releases, keep the `package.json` version and Git tag aligned. Example: `0.2.3` in `package.json` should be released as `v0.2.3`.
 
@@ -62,7 +62,7 @@ That command runs the app build first, then packages the Electron app with `elec
 
 After it finishes, look in the `release` folder for:
 
-- `Code Release Tracker Setup 0.2.3.exe`: the Windows installer
+- `Code Release Tracker Setup 0.2.4.exe`: the Windows installer
 - `win-unpacked`: the unpacked app directory
 
 To install locally, run the installer `.exe` and follow the setup wizard. You can also use the unpacked folder directly if you want to test the app without installing it.
