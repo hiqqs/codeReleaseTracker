@@ -10,6 +10,8 @@
     "build": "tsc -b && vite build",
     "dist:win": "npm run build && electron-builder --win nsis",
     "lint": "eslint .",
+    "test": "themis test",
+    "test:generate": "themis generate src",
     "preview": "vite preview"
   },
   "dependencies": {

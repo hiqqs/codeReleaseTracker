@@ -45,6 +45,9 @@ npm run build
 
 Note: in this environment, `npm run build` may still hit a Vite `spawn EPERM` issue when loading `vite.config.ts`. `tsc -b` and `eslint .` are the more reliable local verification commands here.
 
+Themis tests are available through `npm run test`.
+If you need to regenerate Themis coverage, run `npm run test:generate`.
+
 ## Windows Installer
 
 Build a Windows installer `.exe`:
@@ -81,8 +84,9 @@ If you want to contribute:
 3. Run verification before opening a pull request:
 
 ```bash
-node_modules\.bin\tsc.cmd -b
-node_modules\.bin\eslint.cmd .
+npm run build
+npm run lint
+npm run test
 ```
 
 4. Include a clear summary of what changed, why it changed, and how it was tested.
