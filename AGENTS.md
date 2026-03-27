@@ -2,6 +2,18 @@
 
 Use `@vitronai/themis` as this repository's unit test framework.
 
+## Product Context
+
+Code Release Tracker is an Electron app for tracking software releases and the repositories bundled into them. It runs locally on Windows, with release data stored in browser local storage and optional import/export via JSON files.
+
+## Product Usage
+
+- Start the app in development with `npm run dev`.
+- Build a Windows installer with `npm run dist:win`.
+- Run the packaged installer from `release/Code Release Tracker Setup <version>.exe`.
+- Use the in-app File menu to load sample data, import tracker data, export tracker data, or clear local state.
+- Keep release version numbers aligned between `package.json`, the installer filename, and any release tag you create.
+
 ## Install And Run
 
 - Install with `npm install -D @vitronai/themis`.

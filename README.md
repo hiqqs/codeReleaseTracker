@@ -52,7 +52,7 @@ If you need to regenerate Themis coverage, run `npm run test:generate`.
 
 ## Windows Installer
 
-Build a Windows installer `.exe`:
+Build a Windows installer locally:
 
 ```powershell
 npm run dist:win
@@ -65,19 +65,17 @@ After it finishes, look in the `release` folder for:
 - `Code Release Tracker Setup 0.2.4.exe`: the Windows installer
 - `win-unpacked`: the unpacked app directory
 
-To install locally, run the installer `.exe` and follow the setup wizard. You can also use the unpacked folder directly if you want to test the app without installing it.
+To install locally:
+
+1. Open the `release` folder.
+2. Double-click `Code Release Tracker Setup 0.2.4.exe`.
+3. Follow the setup wizard to install the app.
+
+If you want to test without installing, open the `win-unpacked` folder and run `Code Release Tracker.exe` directly.
 
 ## App Updates
 
-Published Windows installers are stored in the repository's GitHub Releases. The app checks that release feed on startup when running from a packaged Windows build, and prompts you to restart after a downloaded update is ready.
-
-Build the installer locally with:
-
-```powershell
-npm run dist:win
-```
-
-If you want to publish a release, upload the installer from the GitHub Releases UI after tagging a version like `v0.2.3`.
+The packaged app checks GitHub Releases on startup for updates. If you publish a new installer manually, upload the `.exe` to the repository's GitHub Releases and tag it with the matching version number, like `v0.2.4`.
 
 ## Project Structure
 
