@@ -15,7 +15,9 @@ The application lets teams:
 
 ## Version
 
-Current app version: `0.2.2`
+Current app version: `0.2.3`
+
+For releases, keep the `package.json` version and Git tag aligned. Example: `0.2.3` in `package.json` should be released as `v0.2.3`.
 
 ## Development
 
@@ -60,10 +62,23 @@ That command runs the app build first, then packages the Electron app with `elec
 
 After it finishes, look in the `release` folder for:
 
-- `Code Release Tracker Setup 0.2.2.exe`: the Windows installer
+- `Code Release Tracker Setup 0.2.3.exe`: the Windows installer
 - `win-unpacked`: the unpacked app directory
 
 To install locally, run the installer `.exe` and follow the setup wizard. You can also use the unpacked folder directly if you want to test the app without installing it.
+
+## App Updates
+
+Published Windows installers are stored in the repository's GitHub Releases. The app checks that release feed on startup when running from a packaged Windows build, and prompts you to restart after a downloaded update is ready.
+
+To publish a new Windows release from CI or a tag build, use:
+
+```powershell
+npm run release:ci
+```
+
+If you just want to build the installer locally without publishing it, use `npm run dist:win`.
+Do not run `npm run release:ci` locally; it is meant for GitHub Actions publishing only.
 
 ## Project Structure
 

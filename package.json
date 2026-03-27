@@ -1,14 +1,19 @@
 {
   "name": "code-release-tracker",
   "description": "An Electron app for tracking software releases across multiple services or platforms",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "hiqqs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hiqqs/codeReleaseTracker.git"
+  },
   "type": "module",
   "main": "electron.cjs",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "tsc -b && vite build",
     "dist:win": "npm run build && electron-builder --win nsis",
+    "release:ci": "npm run build && electron-builder --win nsis --publish always",
     "lint": "eslint .",
     "test": "themis test",
     "test:generate": "themis generate src",
@@ -16,6 +21,7 @@
   },
   "dependencies": {
     "concurrently": "^8.2.2",
+    "electron-updater": "^6.6.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "wait-on": "^7.0.1"
@@ -47,7 +53,16 @@
       "dist/**/*",
       "electron.cjs",
       "preload.js",
-      "package.json"
+      "package.json",
+      "src/assets/**/*"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "hiqqs",
+        "repo": "codeReleaseTracker",
+        "releaseType": "release"
+      }
     ],
     "win": {
       "target": "nsis",
