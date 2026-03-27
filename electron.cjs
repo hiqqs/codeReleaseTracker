@@ -3,6 +3,12 @@ const path = require("path");
 
 const isDev = !app.isPackaged;
 const WINDOW_TITLE = "Code Release Tracker";
+const WINDOW_ICON = path.join(
+  __dirname,
+  "src",
+  "assets",
+  process.platform === "win32" ? "codeReleaseTrackerLogo.ico" : "codeReleaseTrackerLogo.png",
+);
 
 app.setName(WINDOW_TITLE);
 
@@ -13,7 +19,7 @@ function createWindow() {
     minWidth: 1180,
     minHeight: 760,
     title: WINDOW_TITLE,
-    icon: path.join(__dirname, "src", "assets", "codeReleaseTrackerLogo.png"),
+    icon: WINDOW_ICON,
     backgroundColor: "#05060f",
     frame: false,
     titleBarStyle: "hidden",

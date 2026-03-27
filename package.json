@@ -1,17 +1,19 @@
 {
   "name": "code-release-tracker",
+  "description": "An Electron app for tracking software releases across multiple services or platforms",
   "version": "0.1.1",
+  "author": "hiqqs",
   "type": "module",
   "main": "electron.cjs",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "tsc -b && vite build",
+    "dist:win": "npm run build && electron-builder --win nsis",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "concurrently": "^8.2.2",
-    "electron": "^30.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "wait-on": "^7.0.1"
@@ -25,9 +27,32 @@
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "electron": "^30.0.0",
+    "electron-builder": "^26.0.12",
     "globals": "^17.4.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.johnahigian.codereleasetracker",
+    "productName": "Code Release Tracker",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron.cjs",
+      "preload.js",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/codeReleaseTrackerLogo.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

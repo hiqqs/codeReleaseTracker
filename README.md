@@ -11,7 +11,7 @@ The application lets teams:
 
 ## Version
 
-Current app version: `0.1.0-beta.1`
+Current app version: `0.1.1`
 
 ## Development
 
@@ -40,6 +40,23 @@ npm run build
 ```
 
 Note: in this environment, `npm run build` may still hit a Vite `spawn EPERM` issue when loading `vite.config.ts`. `tsc -b` and `eslint .` are the more reliable local verification commands here.
+
+## Windows Installer
+
+Build a Windows installer `.exe`:
+
+```powershell
+npm run dist:win
+```
+
+That command runs the app build first, then packages the Electron app with `electron-builder`.
+
+After it finishes, look in the `release` folder for:
+
+- `Code Release Tracker Setup 0.1.1.exe`: the Windows installer
+- `win-unpacked`: the unpacked app directory
+
+To install locally, run the installer `.exe` and follow the setup wizard. You can also use the unpacked folder directly if you want to test the app without installing it.
 
 ## Project Structure
 
