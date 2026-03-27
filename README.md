@@ -75,7 +75,9 @@ If you want to test without installing, open the `win-unpacked` folder and run `
 
 ## App Updates
 
-The packaged app checks GitHub Releases on startup for updates. If you publish a new installer manually, upload the `.exe` to the repository's GitHub Releases and tag it with the matching version number, like `v0.2.4`.
+The packaged app checks GitHub Releases on startup for updates and prompts you to restart after a downloaded update is ready.
+
+You can also use `File > Check for updates` inside the app to run the same check manually.
 
 ## Project Structure
 

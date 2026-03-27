@@ -5,6 +5,7 @@ const { pathToFileURL } = require("url");
 
 const isDev = !app.isPackaged;
 const WINDOW_TITLE = "Code Release Tracker";
+const MIN_SPLASH_DURATION_MS = 2000;
 const SPLASH_IMAGE = path.join(__dirname, "src", "assets", "codeReleaseTrackerBg.png");
 const WINDOW_ICON = path.join(
   __dirname,
@@ -14,6 +15,8 @@ const WINDOW_ICON = path.join(
 );
 
 app.setName(WINDOW_TITLE);
+
+let manualUpdateCheckRequested = false;
 
 function setupAutoUpdater() {
   if (process.platform !== "win32" || !app.isPackaged) {
@@ -29,6 +32,16 @@ function setupAutoUpdater() {
 
   autoUpdater.on("update-not-available", (info) => {
     console.log(`No update available: ${info.version}`);
+    if (manualUpdateCheckRequested) {
+      manualUpdateCheckRequested = false;
+      dialog.showMessageBox({
+        type: "info",
+        buttons: ["OK"],
+        defaultId: 0,
+        title: WINDOW_TITLE,
+        message: "You are already on the latest version.",
+      });
+    }
   });
 
   autoUpdater.on("error", (error) => {
@@ -54,6 +67,44 @@ function setupAutoUpdater() {
   autoUpdater.checkForUpdates().catch((error) => {
     console.error("Failed to check for updates:", error);
   });
+}
+
+async function checkForUpdates(manual = false) {
+  if (process.platform !== "win32" || !app.isPackaged) {
+    if (manual) {
+      await dialog.showMessageBox({
+        type: "info",
+        buttons: ["OK"],
+        defaultId: 0,
+        title: WINDOW_TITLE,
+        message: "Update checks are only available in the packaged Windows app.",
+      });
+    }
+    return { ok: false };
+  }
+
+  if (manual) {
+    manualUpdateCheckRequested = true;
+  }
+
+  try {
+    await autoUpdater.checkForUpdates();
+    return { ok: true };
+  } catch (error) {
+    console.error("Failed to check for updates:", error);
+    if (manual) {
+      manualUpdateCheckRequested = false;
+      await dialog.showMessageBox({
+        type: "error",
+        buttons: ["OK"],
+        defaultId: 0,
+        title: WINDOW_TITLE,
+        message: "Unable to check for updates right now.",
+        detail: error instanceof Error ? error.message : "Unknown updater error.",
+      });
+    }
+    return { ok: false };
+  }
 }
 
 function createSplashWindow() {
@@ -104,6 +155,19 @@ function createSplashWindow() {
                 linear-gradient(180deg, rgba(4, 6, 17, 0.18), rgba(4, 6, 17, 0.82)),
                 url("${splashImageUrl}") center/cover no-repeat;
               overflow: hidden;
+              opacity: 0;
+              transform: scale(1.01);
+              transition: opacity 240ms ease, transform 240ms ease;
+            }
+
+            body.is-visible {
+              opacity: 1;
+              transform: scale(1);
+            }
+
+            body.is-closing {
+              opacity: 0;
+              transform: scale(0.99);
             }
 
             .panel {
@@ -132,6 +196,14 @@ function createSplashWindow() {
               font-size: 13px;
             }
 
+            .status {
+              margin: 0;
+              color: rgba(248, 250, 252, 0.62);
+              font-size: 12px;
+              letter-spacing: 0.03em;
+              text-transform: uppercase;
+            }
+
             .spinner {
               width: 22px;
               height: 22px;
@@ -153,7 +225,31 @@ function createSplashWindow() {
             <div class="spinner" aria-hidden="true"></div>
             <p class="title">Code Release Tracker</p>
             <p class="subtitle">Loading releases and workspace state...</p>
+            <p class="status" id="splash-status">Checking for updates...</p>
           </div>
+          <script>
+            const status = document.getElementById("splash-status");
+            const statuses = [
+              "Checking for updates...",
+              "Loading release data...",
+              "Preparing workspace...",
+            ];
+
+            let statusIndex = 0;
+            const rotateStatus = () => {
+              statusIndex = Math.min(statusIndex + 1, statuses.length - 1);
+              if (status) {
+                status.textContent = statuses[statusIndex];
+              }
+            };
+
+            requestAnimationFrame(() => {
+              document.body.classList.add("is-visible");
+            });
+
+            setTimeout(rotateStatus, 650);
+            setTimeout(rotateStatus, 1300);
+          </script>
         </body>
       </html>
     `)}`,
@@ -195,10 +291,6 @@ function createWindow() {
     window.webContents.send("window:maximized-changed", false);
   });
 
-  window.once("ready-to-show", () => {
-    window.show();
-  });
-
   if (isDev) {
     window.loadURL("http://localhost:5173");
   } else {
@@ -213,17 +305,38 @@ function createWindow() {
 function launchApplicationWindow() {
   const splashWindow = createSplashWindow();
   const mainWindow = createWindow();
+  const splashStart = Date.now();
 
   mainWindow.once("ready-to-show", () => {
-    if (!splashWindow.isDestroyed()) {
-      splashWindow.close();
-    }
+    const elapsed = Date.now() - splashStart;
+    const remaining = Math.max(0, MIN_SPLASH_DURATION_MS - elapsed);
+
+    setTimeout(() => {
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.show();
+      }
+      if (!splashWindow.isDestroyed()) {
+        splashWindow.webContents.executeJavaScript(
+          'document.body.classList.add("is-closing")',
+          true,
+        );
+        setTimeout(() => {
+          if (!splashWindow.isDestroyed()) {
+            splashWindow.close();
+          }
+        }, 240);
+      }
+    }, remaining);
   });
 
   return mainWindow;
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle("app:check-for-updates", async () => {
+    return checkForUpdates(true);
+  });
+
   ipcMain.on("window:minimize", (event) => {
     BrowserWindow.fromWebContents(event.sender)?.minimize();
   });

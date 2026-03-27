@@ -651,6 +651,16 @@ function App() {
                 <button
                   type="button"
                   className="file-menu__item"
+                  onClick={() => {
+                    window.electronAPI?.checkForUpdates?.();
+                    setFileMenuOpen(false);
+                  }}
+                >
+                  Check for updates
+                </button>
+                <button
+                  type="button"
+                  className="file-menu__item"
                   onClick={handleExportData}
                   disabled={!releases.length}
                 >
