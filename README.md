@@ -15,7 +15,7 @@ The application lets teams:
 
 ## Version
 
-Current app version: `0.2.5`
+Current app version: `0.2.6`
 
 For releases, keep the `package.json` version and Git tag aligned. Example: `0.2.3` in `package.json` should be released as `v0.2.3`.
 
@@ -63,13 +63,13 @@ It does not publish release assets to GitHub.
 
 After it finishes, look in the `release` folder for:
 
-- `Code Release Tracker Setup 0.2.5.exe`: the Windows installer
+- `Code Release Tracker Setup 0.2.6.exe`: the Windows installer
 - `win-unpacked`: the unpacked app directory
 
 To install locally:
 
 1. Open the `release` folder.
-2. Double-click `Code Release Tracker Setup 0.2.5.exe`.
+2. Double-click `Code Release Tracker Setup 0.2.6.exe`.
 3. Follow the setup wizard to install the app.
 
 If you want to test without installing, open the `win-unpacked` folder and run `Code Release Tracker.exe` directly.
