@@ -13,6 +13,7 @@
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "tsc -b && vite build",
     "dist:win": "npm run build && electron-builder --win nsis",
+    "dist:win:publish": "npm run build && electron-builder --win nsis --publish always",
     "lint": "eslint .",
     "test": "themis test",
     "test:generate": "themis generate src",

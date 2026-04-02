@@ -59,6 +59,7 @@ npm run dist:win
 ```
 
 That command runs the app build first, then packages the Electron app with `electron-builder`.
+It does not publish release assets to GitHub.
 
 After it finishes, look in the `release` folder for:
 
@@ -78,6 +79,20 @@ If you want to test without installing, open the `win-unpacked` folder and run `
 The packaged app checks GitHub Releases on startup for updates and prompts you to restart after a downloaded update is ready.
 
 You can also use `File > Check for updates` inside the app to run the same check manually.
+
+For GitHub-based auto-updates to work, each tagged Windows release must include these `electron-builder` artifacts:
+
+- `latest.yml`
+- `Code Release Tracker Setup <version>.exe`
+- `Code Release Tracker Setup <version>.exe.blockmap`
+
+Local packaging with `npm run dist:win` is not enough. To publish updater-compatible assets, use:
+
+```powershell
+npm run dist:win:publish
+```
+
+In GitHub Actions, expose `GH_TOKEN` and run the same publish command from a Windows runner.
 
 ## Project Structure
 
