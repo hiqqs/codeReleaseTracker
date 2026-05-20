@@ -18,7 +18,7 @@ const {
 const SOURCE_PATH = "src/App.tsx";
 const SOURCE_IMPORT = "../../src/App.tsx";
 const SOURCE_FILE = path.resolve(__dirname, "../../src/App.tsx");
-const SOURCE_HASH = "7b6493e72bf9b0b9109b9e6e75036765a1486637";
+const SOURCE_HASH = "255ca671f6095e7fb4e9906ceafe6837dcb6b15a";
 const REGENERATE_COMMAND = "npx themis generate src/App.tsx";
 const SCANNED_EXPORTS = [
   "default"

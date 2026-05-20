@@ -14,6 +14,7 @@ import type { Release, Repository } from "./models";
 import "./App.css";
 
 const STORAGE_KEY = "code-release-tracker.releases.v2";
+const THEME_KEY = "code-release-tracker.theme";
 const DEFAULT_MONTHLY_TARGET = 8;
 const DEFAULT_QUARTERLY_TARGET = 24;
 
@@ -59,6 +60,7 @@ const createEmptyRepoForm = () => ({
   name: "",
   version: "",
   tag: "",
+  releaseDate: "",
 });
 
 const demoReleases: Release[] = sortReleases([
@@ -131,6 +133,10 @@ const sanitizeRepository = (value: unknown): Repository | null => {
       typeof value.tag === "string" && value.tag.trim()
         ? value.tag.trim()
         : undefined,
+    releaseDate:
+      typeof value.releaseDate === "string" && value.releaseDate.trim()
+        ? value.releaseDate.trim()
+        : undefined,
   };
 };
 
@@ -187,7 +193,7 @@ type MetricCardProps = {
   detail: string;
 };
 
-type RepositorySortKey = "name" | "version" | "tag";
+type RepositorySortKey = "name" | "version" | "tag" | "releaseDate";
 type SortDirection = "asc" | "desc";
 
 function MetricCard({ label, value, accent, detail }: MetricCardProps) {
@@ -232,6 +238,8 @@ function App() {
   const [selectedReleaseId, setSelectedReleaseId] = useState("");
   const [releaseForm, setReleaseForm] = useState(createEmptyReleaseForm);
   const [repoForm, setRepoForm] = useState(createEmptyRepoForm);
+  const [releaseNameDraft, setReleaseNameDraft] = useState("");
+  const [releaseNameError, setReleaseNameError] = useState("");
   const [releaseSearch, setReleaseSearch] = useState("");
   const [repoSearch, setRepoSearch] = useState("");
   const [repositorySort, setRepositorySort] = useState<{
@@ -250,6 +258,9 @@ function App() {
   );
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [isWindowMaximized, setIsWindowMaximized] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(
+    () => (localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark"),
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -259,6 +270,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(releases));
   }, [releases]);
+
+  useEffect(() => {
+    localStorage.setItem(THEME_KEY, theme);
+    document.body.classList.toggle("theme-light", theme === "light");
+  }, [theme]);
 
   useEffect(() => {
     if (!releases.length) {
@@ -342,6 +358,11 @@ function App() {
   const selectedRelease =
     releases.find((release) => release.id === selectedReleaseId) ?? null;
 
+  useEffect(() => {
+    setReleaseNameDraft(selectedRelease?.name ?? "");
+    setReleaseNameError("");
+  }, [selectedRelease?.id, selectedRelease?.name]);
+
   const visibleRepositories = useMemo(() => {
     if (!selectedRelease) return [];
 
@@ -352,7 +373,8 @@ function App() {
         return (
           repository.name.toLowerCase().includes(normalizedRepoSearch) ||
           repository.version.toLowerCase().includes(normalizedRepoSearch) ||
-          (repository.tag || "").toLowerCase().includes(normalizedRepoSearch)
+          (repository.tag || "").toLowerCase().includes(normalizedRepoSearch) ||
+          (repository.releaseDate || "").toLowerCase().includes(normalizedRepoSearch)
         );
       },
     );
@@ -365,13 +387,17 @@ function App() {
           ? left.tag || ""
           : repositorySort.key === "version"
             ? left.version
-            : left.name;
+            : repositorySort.key === "releaseDate"
+              ? left.releaseDate || ""
+              : left.name;
       const rightValue =
         repositorySort.key === "tag"
           ? right.tag || ""
           : repositorySort.key === "version"
             ? right.version
-            : right.name;
+            : repositorySort.key === "releaseDate"
+              ? right.releaseDate || ""
+              : right.name;
 
       return leftValue.localeCompare(rightValue) * directionMultiplier;
     });
@@ -383,6 +409,10 @@ function App() {
 
   const releaseFormValid =
     releaseForm.name.trim().length > 0 && releaseForm.date.length > 0;
+  const releaseNameChanged =
+    selectedRelease !== null && releaseNameDraft.trim() !== selectedRelease.name;
+  const releaseNameFormValid =
+    selectedRelease !== null && releaseNameDraft.trim().length > 0;
   const repoFormValid =
     selectedRelease !== null &&
     repoForm.name.trim().length > 0 &&
@@ -470,6 +500,7 @@ function App() {
       name: repoForm.name.trim(),
       version: repoForm.version.trim(),
       tag: repoForm.tag.trim() || undefined,
+      releaseDate: repoForm.releaseDate.trim() || undefined,
     };
 
     setReleases((current) =>
@@ -496,6 +527,30 @@ function App() {
         current.map((release) =>
           release.id === selectedRelease.id ? { ...release, date } : release,
         ),
+      ),
+    );
+  };
+
+  const handleUpdateSelectedReleaseName = (
+    event: FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    if (!selectedRelease) return;
+
+    const name = releaseNameDraft.trim();
+    if (!name) {
+      setReleaseNameError("Release name is required.");
+      return;
+    }
+
+    setReleaseNameDraft(name);
+    setReleaseNameError("");
+
+    if (name === selectedRelease.name) return;
+
+    setReleases((current) =>
+      current.map((release) =>
+        release.id === selectedRelease.id ? { ...release, name } : release,
       ),
     );
   };
@@ -621,9 +676,14 @@ function App() {
   const showWindowControls = Boolean(window.electronAPI);
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${theme === "light" ? " theme-light" : ""}`}>
       <header className="shell-bar">
         <div className="shell-bar__brand">
+          <img
+            src={logo}
+            alt="Code Release Tracker"
+            className="shell-bar__logo"
+          />
           <div className="file-menu" ref={fileMenuRef}>
             <button
               type="button"
@@ -677,14 +737,17 @@ function App() {
               </div>
             ) : null}
           </div>
-          <img
-            src={logo}
-            alt="Code Release Tracker"
-            className="shell-bar__logo"
-          />
           <strong>Code Release Tracker</strong>
         </div>
         <div className="shell-bar__actions">
+          <button
+            type="button"
+            className="shell-bar__theme-toggle"
+            onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          >
+            {theme === "dark" ? "Light" : "Dark"}
+          </button>
           {showWindowControls ? (
             <div className="shell-bar__window">
               <button
@@ -852,6 +915,7 @@ function App() {
                   ) : null}
                 </span>
                 <input
+                  aria-label="New release name"
                   value={releaseForm.name}
                   onChange={(event) =>
                     setReleaseForm((current) => ({
@@ -875,7 +939,7 @@ function App() {
                     }))
                   }
                   required
-                  aria-label="Release date"
+                  aria-label="New release date"
                 />
                 <span className="field-label__hint">Calendar picker</span>
               </label>
@@ -942,9 +1006,39 @@ function App() {
             <>
               <section className="panel panel--feature">
                 <div className="release-summary">
-                  <div>
+                  <div className="release-summary__content">
                     <p className="eyebrow eyebrow--dark">Selected release</p>
-                    <h2>{selectedRelease.name}</h2>
+                    <form
+                      className="release-name-form"
+                      onSubmit={handleUpdateSelectedReleaseName}
+                    >
+                      <label className="field-label field-label--required release-name-form__field">
+                        <span className="field-label__row">Release name</span>
+                        <input
+                          value={releaseNameDraft}
+                          onChange={(event) => {
+                            setReleaseNameDraft(event.target.value);
+                            if (releaseNameError) {
+                              setReleaseNameError("");
+                            }
+                          }}
+                          aria-label="Edit release name"
+                          required
+                        />
+                      </label>
+                      <button
+                        type="submit"
+                        className="button button--ghost release-name-form__button"
+                        disabled={!releaseNameFormValid || !releaseNameChanged}
+                      >
+                        Save name
+                      </button>
+                    </form>
+                    {releaseNameError ? (
+                      <p className="release-name-form__error">
+                        {releaseNameError}
+                      </p>
+                    ) : null}
                     <p className="release-summary__meta">
                       {formatDate(selectedRelease.date)} -{" "}
                       {selectedRelease.repositories.length} repositories
@@ -1009,6 +1103,7 @@ function App() {
                       ) : null}
                     </span>
                     <input
+                      aria-label="Repository name"
                       value={repoForm.name}
                       onChange={(event) =>
                         setRepoForm((current) => ({
@@ -1030,6 +1125,7 @@ function App() {
                       ) : null}
                     </span>
                     <input
+                      aria-label="Repository version"
                       value={repoForm.version}
                       onChange={(event) =>
                         setRepoForm((current) => ({
@@ -1044,6 +1140,7 @@ function App() {
                   <label>
                     Tag
                     <input
+                      aria-label="Repository tag"
                       value={repoForm.tag}
                       onChange={(event) =>
                         setRepoForm((current) => ({
@@ -1052,6 +1149,20 @@ function App() {
                         }))
                       }
                       placeholder="stable"
+                    />
+                  </label>
+                  <label>
+                    Release date
+                    <input
+                      aria-label="Repository release date"
+                      type="date"
+                      value={repoForm.releaseDate}
+                      onChange={(event) =>
+                        setRepoForm((current) => ({
+                          ...current,
+                          releaseDate: event.target.value,
+                        }))
+                      }
                     />
                   </label>
                   <button
@@ -1075,7 +1186,7 @@ function App() {
                     <input
                       value={repoSearch}
                       onChange={(event) => setRepoSearch(event.target.value)}
-                      placeholder="Search repo, version, or tag"
+                      placeholder="Search repo, version, tag, or date"
                     />
                   </label>
                 </div>
@@ -1133,6 +1244,22 @@ function App() {
                               </span>
                             </button>
                           </th>
+                          <th>
+                            <button
+                              type="button"
+                              className={`repository-table__sort${
+                                repositorySort.key === "releaseDate" ? " is-active" : ""
+                              }`}
+                              onClick={() => handleToggleRepositorySort("releaseDate")}
+                            >
+                              Release date
+                              <span className="repository-table__sort-indicator">
+                                {repositorySort.key === "releaseDate"
+                                  ? repositorySort.direction.toUpperCase()
+                                  : "SORT"}
+                              </span>
+                            </button>
+                          </th>
                           <th />
                         </tr>
                       </thead>
@@ -1159,6 +1286,15 @@ function App() {
                                   </span>
                                 )}
                               </td>
+                              <td>
+                                {repository.releaseDate ? (
+                                  repository.releaseDate
+                                ) : (
+                                  <span className="tag-chip tag-chip--muted">
+                                    Not set
+                                  </span>
+                                )}
+                              </td>
                               <td className="repository-table__actions">
                                 <button
                                   type="button"
@@ -1177,7 +1313,7 @@ function App() {
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={4} className="repository-table__empty">
+                            <td colSpan={5} className="repository-table__empty">
                               No repositories match the current filter.
                             </td>
                           </tr>

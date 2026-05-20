@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(curl -s \"https://registry.npmjs.org/@vitronai/alethia\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/vitron-ai/alethia/main/README.md\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/vitron-ai/alethia-mcp/main/docs/agent-cookbook.md\")",
+      "Bash(npm install *)",
+      "mcp__alethia__alethia_status",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "PowerShell(Expand-Archive -Path \"$env:USERPROFILE\\\\.alethia\\\\runtime\\\\Alethia-0.7.8-win.zip\" -DestinationPath \"$env:USERPROFILE\\\\.alethia\\\\runtime\" -Force; Write-Output \"Done\")",
+      "PowerShell(Get-ChildItem \"$env:USERPROFILE\\\\.alethia\\\\runtime\" -Recurse | Select-Object FullName, Length)",
+      "PowerShell(Get-ChildItem \"$env:USERPROFILE\\\\.alethia\" -Recurse | Select-Object FullName)",
+      "Read(//c/Users/JohnAhigian/.alethia/**)",
+      "Read(//c/Users/JohnAhigian/.alethia/runtime/**)",
+      "Bash(~/.alethia/runtime/Alethia.exe)",
+      "Bash(curl -s http://127.0.0.1:47432/health)",
+      "Bash(curl -s http://127.0.0.1:47432/)",
+      "Bash(curl -s http://127.0.0.1:47432/status)",
+      "Bash(alethia-mcp --health-check)",
+      "PowerShell(npx alethia-mcp --health-check 2>&1)"
+    ]
+  }
+}

@@ -49,3 +49,20 @@ body {
   z-index: -2;
   pointer-events: none;
 }
+
+body.theme-light {
+  background: #c8cfd9;
+}
+
+body.theme-light #root::before {
+  opacity: 0.18;
+  filter: saturate(0.5) brightness(1.4);
+}
+
+body.theme-light #root::after {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(37, 99, 235, 0.07), transparent 42%),
+    radial-gradient(circle at 82% 10%, rgba(56, 189, 248, 0.04), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.03), transparent 36%);
+  opacity: 0.5;
+}

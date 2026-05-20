@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "test": "themis test",
     "test:generate": "themis generate src",
+    "test:e2e": "alethia-mcp",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitronai/alethia": "^0.8.6",
     "@vitronai/themis": "^0.1.12",
     "electron": "^30.0.0",
     "electron-builder": "^26.0.12",

@@ -3,6 +3,7 @@ export interface Repository {
   name: string;
   version: string;
   tag?: string;
+  releaseDate?: string;
 }
 
 export interface Release {

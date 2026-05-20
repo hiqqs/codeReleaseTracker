@@ -1,0 +1,72 @@
+{
+  "version": "1",
+  "app": "code-release-tracker",
+  "baseUrl": "http://localhost:5173",
+  "flows": [
+    {
+      "id": "smoke",
+      "name": "Smoke test — app loads",
+      "nlp": "Navigate to http://localhost:5173. Assert 'Code Release Tracker' is visible. Assert 'File' is visible. Assert 'Version' is visible."
+    },
+    {
+      "id": "load-sample-data",
+      "name": "Load sample data from File menu",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Assert 'Spring Ops Release' is visible. Assert 'Payments Patch Train' is visible."
+    },
+    {
+      "id": "create-release",
+      "name": "Create a new release",
+      "nlp": "Navigate to http://localhost:5173. Type 'Q3 Rollout' in the 'New release name' field. Type '2026-06-01' in the 'New release date' field. Click 'Create release'. Assert 'Q3 Rollout' is visible."
+    },
+    {
+      "id": "select-release",
+      "name": "Select a release and open the workspace",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Assert 'Repository ledger' is visible. Assert 'What ships inside this release' is visible. Assert 'gateway-service' is visible."
+    },
+    {
+      "id": "add-repository",
+      "name": "Add a repository to a release",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Type 'audit-service' in the 'Repository name' field. Type '3.1.0' in the 'Repository version' field. Type 'candidate' in the 'Repository tag' field. Click 'Add repository'. Assert 'audit-service' is visible."
+    },
+    {
+      "id": "add-repository-with-release-date",
+      "name": "Add a repository with an individual release date",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Type 'billing-worker' in the 'Repository name' field. Type '2.0.0' in the 'Repository version' field. Type '2026-03-10' in the 'Repository release date' field. Click 'Add repository'. Assert 'billing-worker' is visible."
+    },
+    {
+      "id": "filter-ledger",
+      "name": "Filter the repository ledger",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Type 'gateway' in the 'Filter repositories' search field. Assert only 'gateway-service' is visible in the repository table and other repos are hidden. Clear the search field. Assert all repositories are visible again."
+    },
+    {
+      "id": "sort-ledger-by-version",
+      "name": "Sort the repository ledger by version",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Click 'Version SORT'. Assert 'ASC' is visible. Click 'Version ASC'. Assert 'DESC' is visible."
+    },
+    {
+      "id": "sort-ledger-by-release-date",
+      "name": "Sort the repository ledger by release date",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Click 'Release date SORT'. Assert 'ASC' is visible."
+    },
+    {
+      "id": "theme-toggle",
+      "name": "Toggle between dark and light themes",
+      "nlp": "Navigate to http://localhost:5173. Assert 'Light' button is visible. Click the 'Light' button. Assert 'Dark' button is visible. Click the 'Dark' button. Assert 'Light' button is visible."
+    },
+    {
+      "id": "remove-repository-confirm",
+      "name": "Remove repository — cancel at confirmation dialog",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click 'Spring Ops Release'. Click 'Remove'. Assert 'gateway-service' is visible."
+    },
+    {
+      "id": "export-data",
+      "name": "Export tracker data",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Click the File button. Click 'Export tracker data'. Assert a file download is triggered or that the menu closes without an error."
+    },
+    {
+      "id": "clear-tracker-safety",
+      "name": "Clear tracker — cancel at confirmation dialog",
+      "nlp": "Navigate to http://localhost:5173. Click the 'File' button. Click 'Load sample data'. Assert releases are visible. Click the File button. Click 'Clear tracker'. Expect a confirmation dialog. Dismiss the dialog without confirming. Assert the releases are still visible in the list."
+    }
+  ]
+}
