@@ -19,7 +19,7 @@ The application lets teams:
 
 ## Version
 
-Current app version: `0.2.6`
+Current app version: `0.2.8`
 
 For releases, keep the `package.json` version and Git tag aligned. Example: `0.2.3` in `package.json` should be released as `v0.2.3`.
 
