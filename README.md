@@ -1,7 +1,7 @@
 # Code Release Tracker
 
 [![CI](https://img.shields.io/github/actions/workflow/status/hiqqs/codeReleaseTracker/ci.yml?style=flat-square&label=CI&logo=githubactions&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/actions/workflows/ci.yml)
-[![Windows release](https://img.shields.io/github/actions/workflow/status/hiqqs/codeReleaseTracker/release.yml?style=flat-square&label=Windows%20release&logo=githubactions&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/actions/workflows/release.yml)
+[![Windows release](https://img.shields.io/github/actions/workflow/status/hiqqs/codeReleaseTracker/release.yml?style=flat-square&label=Release&logo=githubactions&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/actions/workflows/release.yml)
 [![Latest release](https://img.shields.io/github/v/release/hiqqs/codeReleaseTracker?style=flat-square&label=Latest%20release&logo=github&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/releases/latest)
 
 Code Release Tracker is an Electron desktop application for managing software releases and the repositories that ship inside them. It is built with React, TypeScript, Vite, and Electron.
@@ -78,25 +78,42 @@ To install locally:
 
 If you want to test without installing, open the `win-unpacked` folder and run `Code Release Tracker.exe` directly.
 
+## Linux AppImage
+
+Download `Code-Release-Tracker-<version>-x86_64.AppImage` from the [latest release](https://github.com/hiqqs/codeReleaseTracker/releases/latest), then make it executable and run it:
+
+```bash
+chmod +x Code-Release-Tracker-*.AppImage
+./Code-Release-Tracker-*.AppImage
+```
+
+Some distributions (for example Ubuntu 22.04 and later) need FUSE 2 to run AppImages: `sudo apt install libfuse2` (`libfuse2t64` on Ubuntu 24.04).
+
+Build an AppImage locally (on Linux):
+
+```bash
+npm run dist:linux
+```
+
+The AppImage is written to the `release` folder.
+
 ## App Updates
 
 The packaged app checks GitHub Releases on startup for updates and prompts you to restart after a downloaded update is ready.
 
 You can also use `File > Check for updates` inside the app to run the same check manually.
 
-For GitHub-based auto-updates to work, each tagged Windows release must include these `electron-builder` artifacts:
+Auto-updates work in the installed Windows app and in the Linux AppImage. For them to work, each tagged release must include these `electron-builder` artifacts:
 
-- `latest.yml`
-- `Code Release Tracker Setup <version>.exe`
-- `Code Release Tracker Setup <version>.exe.blockmap`
+- Windows: `latest.yml`, `Code Release Tracker Setup <version>.exe`, `Code Release Tracker Setup <version>.exe.blockmap`
+- Linux: `latest-linux.yml`, `Code-Release-Tracker-<version>-x86_64.AppImage`
 
-Local packaging with `npm run dist:win` is not enough. To publish updater-compatible assets, use:
+Local packaging with `npm run dist:win` or `npm run dist:linux` is not enough. Releases are published by the `Release` GitHub Actions workflow, which runs `npm run dist:win:publish` on Windows and `npm run dist:linux:publish` on Linux when a `v*` tag is pushed:
 
-```powershell
-npm run dist:win:publish
+```bash
+npm version <new-version>
+git push origin main --follow-tags
 ```
-
-In GitHub Actions, expose `GH_TOKEN` and run the same publish command from a Windows runner.
 
 ## Project Structure
 
