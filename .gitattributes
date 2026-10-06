@@ -1,0 +1,3 @@
+# Themis generated tests hash source file bytes; keep line endings identical on every OS.
+src/**/*.ts text eol=lf
+src/**/*.tsx text eol=lf

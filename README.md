@@ -1,5 +1,9 @@
 # Code Release Tracker
 
+[![CI](https://img.shields.io/github/actions/workflow/status/hiqqs/codeReleaseTracker/ci.yml?style=flat-square&label=CI&logo=githubactions&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/actions/workflows/ci.yml)
+[![Windows release](https://img.shields.io/github/actions/workflow/status/hiqqs/codeReleaseTracker/release.yml?style=flat-square&label=Windows%20release&logo=githubactions&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/hiqqs/codeReleaseTracker?style=flat-square&label=Latest%20release&logo=github&logoColor=white)](https://github.com/hiqqs/codeReleaseTracker/releases/latest)
+
 Code Release Tracker is an Electron desktop application for managing software releases and the repositories that ship inside them. It is built with React, TypeScript, Vite, and Electron.
 
 <p align="center">
